@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vegas Ultimatum</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Share+Tech+Mono&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vegas-black': '#0a0a0a',
+                        'vegas-gold': '#D4AF37',
+                        'neon-red': '#FF003C',
+                        'gold-light': '#F3E5AB'
+                    },
+                    fontFamily: {
+                        'luxury': ['Cinzel', 'serif'],
+                        'digital': ['Share Tech Mono', 'monospace'],
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px #FF003C, 0 0 20px #FF003C, 0 0 30px #FF003C',
+                        'gold-glow': '0 0 15px rgba(212, 175, 55, 0.4)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .bg-video-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            /* Vegas strip at night via Unsplash */
+            background: url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&q=80&w=2000') no-result center center / cover;
+            filter: blur(8px) brightness(0.35);
+            transform: scale(1.05); /* hide blurred edges */
+        }
+        
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+        }
+
+        .digital-glow {
+            text-shadow: 0 0 10px #D4AF37, 0 0 20px #D4AF37;
+        }
+
+        .neon-text-red {
+            color: #FF003C;
+            text-shadow: 0 0 5px #FF003C, 0 0 15px #FF003C, 0 0 25px #FF003C;
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar {
+            transition: width 1s linear, background-color 0.3s ease;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); }
+        }
+        
+        .btn-neon:hover {
+            animation: pulse-red 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="text-white font-sans antialiased flex flex-col items-center justify-center min-h-screen p-4">
+
+    <!-- Blurred Background -->
+    <div class="bg-video-blur"></div>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 glass-panel rounded-2xl p-8 md:p-12 max-w-3xl w-full text-center border-t-2 border-vegas-gold flex flex-col gap-8 md:gap-12">
+        
+        <!-- Header -->
+        <header>
+            <h2 class="text-vegas-gold tracking-widest uppercase text-sm font-semibold mb-2">Operation:</h2>
+            <h1 class="font-luxury text-4xl md:text-6xl text-white font-bold leading-tight drop-shadow-xl tracking-wide">
+                The Vegas Ultimatum
+            </h1>
+            <div class="h-0.5 w-24 bg-vegas-gold mx-auto mt-6 shadow-gold-glow"></div>
+        </header>
+
+        <!-- Timer Section -->
+        <section id="timer-container" class="py-4">
+            <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-6 font-digital text-vegas-gold digital-glow">
+                
+                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
+                    <span id="days" class="text-3xl md:text-6xl font-bold">00</span>
+                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Days</span>
+                </div>
+                
+                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
+                    <span id="hours" class="text-3xl md:text-6xl font-bold">00</span>
+                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Hours</span>
+                </div>
+                
+                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
+                    <span id="minutes" class="text-3xl md:text-6xl font-bold">00</span>
+                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Mins</span>
+                </div>
+                
+                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
+                    <span id="seconds" class="text-3xl md:text-6xl font-bold neon-text-red" style="text-shadow: 0 0 10px #FF003C;">00</span>
+                    <span class="text-xs md:text-sm text-neon-red mt-2 tracking-widest uppercase font-sans font-bold">Secs</span>
+                </div>
+
+            </div>
+            
+            <div id="zero-state" class="hidden font-luxury text-3xl md:text-5xl neon-text-red font-bold py-8 animate-pulse">
+                THE VEGAS FREE AGENT HAS LANDED.
+            </div>
+        </section>
+
+        <!-- Status Bar -->
+        <section class="max-w-md mx-auto w-full">
+            <div class="flex justify-between items-end mb-2">
+                <span class="text-xs tracking-widest uppercase text-gray-400 font-semibold">Relationship Status</span>
+                <span id="status-percent" class="font-digital text-vegas-gold text-sm">100%</span>
+            </div>
+            <div class="w-full bg-gray-900 rounded-full h-3 md:h-4 border border-gray-700 overflow-hidden relative">
+                <!-- Inner glow -->
+                <div class="absolute inset-0 shadow-[inset_0_0_5px_rgba(0,0,0,0.5)] z-10"></div>
+                <!-- Progress Fill -->
+                <div id="status-bar" class="progress-bar bg-gradient-to-r from-green-500 via-yellow-500 to-neon-red h-full rounded-full w-full relative z-0">
+                    <!-- animated shine -->
+                    <div class="absolute top-0 left-0 w-full h-full bg-white opacity-20" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 2s linear infinite;"></div>
+                </div>
+            </div>
+            <p id="status-message" class="text-xs text-gray-400 mt-3 italic">Patience levels critically depleting...</p>
+        </section>
+
+        <!-- CTA Button -->
+        <section class="pt-4 pb-2">
+            <button id="cta-button" class="group relative px-8 py-4 bg-transparent text-white font-bold tracking-widest uppercase text-sm md:text-base overflow-hidden rounded-full border border-neon-red shadow-neon transition-all duration-300 hover:bg-neon-red hover:text-white btn-neon">
+                <!-- Background hover effect -->
+                <div class="absolute inset-0 w-0 bg-white transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
+                <span class="relative">Commitment Confirmation</span>
+            </button>
+        </section>
+
+        <!-- Popup Alert -->
+        <div id="popup-alert" class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black bg-opacity-80 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+            <div class="bg-gray-900 border-2 border-neon-red rounded-lg p-8 max-w-sm w-full shadow-neon transform scale-95 transition-transform duration-300 opacity-0" id="popup-content">
+                <div class="text-neon-red text-5xl mb-4">⚠️</div>
+                <h3 class="font-luxury text-2xl text-white mb-2">Access Denied</h3>
+                <p class="text-gray-300 font-sans mb-6">Try again after the flight.</p>
+                <button id="close-popup" class="px-6 py-2 bg-transparent border border-vegas-gold text-vegas-gold rounded hover:bg-vegas-gold hover:text-black transition-colors uppercase tracking-widest text-xs font-bold">
+                    Dismiss
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <style>
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+
+    <script>
+        // Target Date: March 14, 2026, 9:30 AM Pacific Time (PDT is -07:00)
+        // Adjust standard vs daylight saving if needed, but in March 2026 daylight saving time starts on March 8th, so -07:00 is correct for PDT.
+        const targetDate = new Date('2026-03-14T09:30:00-07:00').getTime();
+        
+        // Start date for the status bar (e.g. March 1, 2026)
+        const startDate = new Date('2026-03-01T00:00:00-08:00').getTime();
+        const totalDuration = targetDate - startDate;
+
+        // Elements
+        const elDays = document.getElementById('days');
+        const elHours = document.getElementById('hours');
+        const elMinutes = document.getElementById('minutes');
+        const elSeconds = document.getElementById('seconds');
+        
+        const countdownContainer = document.getElementById('countdown');
+        const zeroState = document.getElementById('zero-state');
+        
+        const statusBar = document.getElementById('status-bar');
+        const statusPercent = document.getElementById('status-percent');
+        const statusMessage = document.getElementById('status-message');
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Update Progress Bar
+            let progress = 0;
+            if (now >= startDate && now < targetDate) {
+                // How much time is left relative to total duration
+                progress = (distance / totalDuration) * 100;
+            } else if (now >= targetDate) {
+                progress = 0;
+            } else {
+                progress = 100;
+            }
+            
+            // Format percentage
+            const percentFormatted = Math.max(0, Math.min(100, progress)).toFixed(1);
+            statusBar.style.width = `${percentFormatted}%`;
+            statusPercent.textContent = `${percentFormatted}%`;
+
+            // Change progress bar color based on percentage
+            if (progress < 20) {
+                statusBar.classList.remove('bg-gradient-to-r', 'from-green-500', 'via-yellow-500', 'to-neon-red');
+                statusBar.style.backgroundColor = '#FF003C';
+                statusMessage.textContent = "CRITICAL: Imminent Las Vegas Departure!";
+                statusMessage.classList.add('neon-text-red');
+            } else if (progress < 50) {
+                statusMessage.textContent = "Warning: Patience levels depleting...";
+            }
+
+            // Zero State
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                elDays.innerText = '00';
+                elHours.innerText = '00';
+                elMinutes.innerText = '00';
+                elSeconds.innerText = '00';
+                
+                countdownContainer.classList.add('hidden');
+                zeroState.classList.remove('hidden');
+                return;
+            }
+
+            // Time calculations
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output with leading zeros
+            elDays.innerText = String(days).padStart(2, '0');
+            elHours.innerText = String(hours).padStart(2, '0');
+            elMinutes.innerText = String(minutes).padStart(2, '0');
+            elSeconds.innerText = String(seconds).padStart(2, '0');
+        }
+
+        // Initialize and tick
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // CTA Interaction
+        const ctaBtn = document.getElementById('cta-button');
+        const popupAlert = document.getElementById('popup-alert');
+        const closePopupBtn = document.getElementById('close-popup');
+        const popupContent = document.getElementById('popup-content');
+
+        ctaBtn.addEventListener('click', () => {
+            // Fire confetti
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#D4AF37', '#FF003C', '#000000', '#FFFFFF']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#D4AF37', '#FF003C', '#000000', '#FFFFFF']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Show Popup
+            setTimeout(() => {
+                popupAlert.classList.remove('hidden');
+                // Trigger reflow
+                void popupAlert.offsetWidth;
+                popupAlert.classList.remove('opacity-0');
+                popupAlert.classList.add('opacity-100');
+                
+                popupContent.classList.remove('opacity-0', 'scale-95');
+                popupContent.classList.add('opacity-100', 'scale-100');
+            }, 500); // slight delay after confetti starts
+        });
+
+        const closePopup = () => {
+            popupAlert.classList.remove('opacity-100');
+            popupAlert.classList.add('opacity-0');
+            
+            popupContent.classList.remove('opacity-100', 'scale-100');
+            popupContent.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                popupAlert.classList.add('hidden');
+            }, 300); // Wait for transition
+        };
+
+        closePopupBtn.addEventListener('click', closePopup);
+        
+        // Close on clicking outside
+        popupAlert.addEventListener('click', (e) => {
+            if (e.target === popupAlert) {
+                closePopup();
+            }
+        });
+    </script>
+</body>
+</html>
