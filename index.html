@@ -1,341 +1,640 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Vegas Ultimatum</title>
-    
+    <title>A Question for Erin 💕</title>
+    <meta name="description" content="Something important, just for Erin.">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Share+Tech+Mono&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'vegas-black': '#0a0a0a',
-                        'vegas-gold': '#D4AF37',
-                        'neon-red': '#FF003C',
-                        'gold-light': '#F3E5AB'
-                    },
-                    fontFamily: {
-                        'luxury': ['Cinzel', 'serif'],
-                        'digital': ['Share Tech Mono', 'monospace'],
-                        'sans': ['Inter', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'neon': '0 0 10px #FF003C, 0 0 20px #FF003C, 0 0 30px #FF003C',
-                        'gold-glow': '0 0 15px rgba(212, 175, 55, 0.4)'
-                    }
-                }
-            }
-        }
-    </script>
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
     <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        body, html {
-            height: 100%;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
-            background-color: #0a0a0a;
+            padding: 0;
+        }
+
+        :root {
+            --rose: #e8517a;
+            --rose-dark: #c23a60;
+            --rose-glow: rgba(232, 81, 122, 0.45);
+            --gold: #D4AF37;
+            --gold-dim: rgba(212, 175, 55, 0.25);
+            --black: #080810;
+            --panel: rgba(8, 8, 20, 0.72);
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--black);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
         }
 
-        .bg-video-blur {
+        /* ── Animated starfield bg ── */
+        .bg-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            /* Vegas strip at night via Unsplash */
-            background: url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&q=80&w=2000') no-result center center / cover;
-            filter: blur(8px) brightness(0.35);
-            transform: scale(1.05); /* hide blurred edges */
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(232, 81, 122, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(100, 60, 180, 0.1) 0%, transparent 55%),
+                #080810;
         }
-        
-        .glass-panel {
-            background: rgba(10, 10, 10, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+
+        /* Floating hearts */
+        .hearts-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -60px;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatHeart linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(-15deg) scale(0.8);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(15deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        /* ── Glass panel ── */
+        .glass {
+            background: var(--panel);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            border-top: 2px solid var(--gold);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Layout ── */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 680px;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        /* ── Title ── */
+        .eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.6rem, 8vw, 4.4rem);
+            font-weight: 600;
+            line-height: 1.1;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(232, 81, 122, 0.25);
+        }
+
+        h1 .name {
+            color: var(--rose);
+            font-style: italic;
+            text-shadow: 0 0 20px var(--rose-glow), 0 0 60px var(--rose-glow);
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0.8rem auto 0;
+        }
+
+        /* ── Countdown ── */
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem;
+        }
+
+        .time-cell {
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 0.9rem 0.4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .digital-glow {
-            text-shadow: 0 0 10px #D4AF37, 0 0 20px #D4AF37;
+        .time-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(1.8rem, 6vw, 3.2rem);
+            color: var(--gold);
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+            line-height: 1;
         }
 
-        .neon-text-red {
-            color: #FF003C;
-            text-shadow: 0 0 5px #FF003C, 0 0 15px #FF003C, 0 0 25px #FF003C;
+        .time-num.secs {
+            color: var(--rose);
+            text-shadow: 0 0 10px var(--rose-glow);
         }
 
-        /* Progress Bar Animation */
-        .progress-bar {
-            transition: width 1s linear, background-color 0.3s ease;
+        .time-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
         }
 
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 0, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); }
+        .zero-state {
+            display: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            color: var(--rose);
+            font-style: italic;
+            text-shadow: 0 0 20px var(--rose-glow);
+            animation: softPulse 2s ease-in-out infinite;
+            padding: 1rem 0;
         }
-        
-        .btn-neon:hover {
-            animation: pulse-red 1.5s infinite;
+
+        @keyframes softPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* ── Status bar ── */
+        .status-section {
+            text-align: left;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+        }
+
+        .status-pct {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+
+
+        /* ── Proposal buttons ── */
+        .proposal-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .question {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 4vw, 1.9rem);
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 60px;
+            position: relative;
+        }
+
+        .btn-yes {
+            padding: 0.85rem 2.4rem;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--rose-dark), var(--rose));
+            color: #fff;
+            box-shadow: 0 0 20px var(--rose-glow), 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .btn-yes::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0);
+            transition: background 0.2s;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.07);
+            box-shadow: 0 0 35px var(--rose-glow), 0 6px 28px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-yes:hover::before {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-yes:active {
+            transform: scale(0.96);
+        }
+
+        .btn-no {
+            padding: 0.7rem 1.6rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 99px;
+            cursor: pointer;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.32);
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ── Celebration popup ── */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .popup-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .popup-box {
+            background: rgba(12, 8, 24, 0.95);
+            border: 1px solid var(--rose);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 60px var(--rose-glow);
+            transform: scale(0.88);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .popup-overlay.visible .popup-box {
+            transform: scale(1);
+        }
+
+        .popup-emoji {
+            font-size: 3.5rem;
+            line-height: 1;
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .popup-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .popup-body {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .popup-close {
+            margin-top: 0.5rem;
+            padding: 0.6rem 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .popup-close:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        /* ── Footer note ── */
+        .footer-note {
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.18);
+            text-transform: uppercase;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 420px) {
+            main {
+                padding: 2rem 1.25rem;
+                gap: 1.5rem;
+            }
         }
     </style>
 </head>
-<body class="text-white font-sans antialiased flex flex-col items-center justify-center min-h-screen p-4">
 
-    <!-- Blurred Background -->
-    <div class="bg-video-blur"></div>
+<body>
 
-    <!-- Main Content Container -->
-    <main class="relative z-10 glass-panel rounded-2xl p-8 md:p-12 max-w-3xl w-full text-center border-t-2 border-vegas-gold flex flex-col gap-8 md:gap-12">
-        
+    <!-- Background -->
+    <div class="bg-layer"></div>
+
+    <!-- Floating hearts -->
+    <div class="hearts-layer" id="hearts-layer"></div>
+
+    <!-- Celebration Popup -->
+    <div class="popup-overlay" id="popup-overlay">
+        <div class="popup-box">
+            <div class="popup-emoji">💕</div>
+            <h2 class="popup-title">She said YES!</h2>
+            <button class="popup-close" id="popup-close">Close</button>
+        </div>
+    </div>
+
+    <!-- Main Card -->
+    <main class="glass">
+
         <!-- Header -->
         <header>
-            <h2 class="text-vegas-gold tracking-widest uppercase text-sm font-semibold mb-2">Operation:</h2>
-            <h1 class="font-luxury text-4xl md:text-6xl text-white font-bold leading-tight drop-shadow-xl tracking-wide">
-                The Vegas Ultimatum
-            </h1>
-            <div class="h-0.5 w-24 bg-vegas-gold mx-auto mt-6 shadow-gold-glow"></div>
+            <p class="eyebrow">A question, just for you</p>
+            <h1>Erin,<br>will you be my<br><span class="name">girlfriend?</span></h1>
+            <div class="divider"></div>
         </header>
 
-        <!-- Timer Section -->
-        <section id="timer-container" class="py-4">
-            <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-6 font-digital text-vegas-gold digital-glow">
-                
-                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
-                    <span id="days" class="text-3xl md:text-6xl font-bold">00</span>
-                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Days</span>
+        <!-- Countdown -->
+        <section id="timer-section">
+            <div class="countdown-grid" id="countdown">
+                <div class="time-cell">
+                    <span class="time-num" id="days">00</span>
+                    <span class="time-label">Days</span>
                 </div>
-                
-                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
-                    <span id="hours" class="text-3xl md:text-6xl font-bold">00</span>
-                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Hours</span>
+                <div class="time-cell">
+                    <span class="time-num" id="hours">00</span>
+                    <span class="time-label">Hours</span>
                 </div>
-                
-                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
-                    <span id="minutes" class="text-3xl md:text-6xl font-bold">00</span>
-                    <span class="text-xs md:text-sm text-gray-400 mt-2 tracking-widest uppercase font-sans">Mins</span>
+                <div class="time-cell">
+                    <span class="time-num" id="minutes">00</span>
+                    <span class="time-label">Mins</span>
                 </div>
-                
-                <div class="flex flex-col items-center bg-black bg-opacity-50 rounded-lg p-3 md:p-6 border border-vegas-gold border-opacity-30">
-                    <span id="seconds" class="text-3xl md:text-6xl font-bold neon-text-red" style="text-shadow: 0 0 10px #FF003C;">00</span>
-                    <span class="text-xs md:text-sm text-neon-red mt-2 tracking-widest uppercase font-sans font-bold">Secs</span>
+                <div class="time-cell">
+                    <span class="time-num secs" id="seconds">00</span>
+                    <span class="time-label">Secs</span>
                 </div>
-
             </div>
-            
-            <div id="zero-state" class="hidden font-luxury text-3xl md:text-5xl neon-text-red font-bold py-8 animate-pulse">
-                THE VEGAS FREE AGENT HAS LANDED.
+            <div class="zero-state" id="zero-state">
+                The moment is now. 💕
+            </div>
+            <p class="status-msg" style="margin-top: 0.75rem; text-align:center;">until the big moment — March 14, 2026
+            </p>
+        </section>
+
+        <!-- Proposal Buttons -->
+        <section class="proposal-section">
+            <p class="question">So… what do you say?</p>
+            <div class="btn-row" id="btn-row">
+                <button class="btn-yes" id="btn-yes">💕 Yes!</button>
+                <button class="btn-no" id="btn-no">No</button>
             </div>
         </section>
 
-        <!-- Status Bar -->
-        <section class="max-w-md mx-auto w-full">
-            <div class="flex justify-between items-end mb-2">
-                <span class="text-xs tracking-widest uppercase text-gray-400 font-semibold">Relationship Status</span>
-                <span id="status-percent" class="font-digital text-vegas-gold text-sm">100%</span>
-            </div>
-            <div class="w-full bg-gray-900 rounded-full h-3 md:h-4 border border-gray-700 overflow-hidden relative">
-                <!-- Inner glow -->
-                <div class="absolute inset-0 shadow-[inset_0_0_5px_rgba(0,0,0,0.5)] z-10"></div>
-                <!-- Progress Fill -->
-                <div id="status-bar" class="progress-bar bg-gradient-to-r from-green-500 via-yellow-500 to-neon-red h-full rounded-full w-full relative z-0">
-                    <!-- animated shine -->
-                    <div class="absolute top-0 left-0 w-full h-full bg-white opacity-20" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 2s linear infinite;"></div>
-                </div>
-            </div>
-            <p id="status-message" class="text-xs text-gray-400 mt-3 italic">Patience levels critically depleting...</p>
-        </section>
-
-        <!-- CTA Button -->
-        <section class="pt-4 pb-2">
-            <button id="cta-button" class="group relative px-8 py-4 bg-transparent text-white font-bold tracking-widest uppercase text-sm md:text-base overflow-hidden rounded-full border border-neon-red shadow-neon transition-all duration-300 hover:bg-neon-red hover:text-white btn-neon">
-                <!-- Background hover effect -->
-                <div class="absolute inset-0 w-0 bg-white transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
-                <span class="relative">Commitment Confirmation</span>
-            </button>
-        </section>
-
-        <!-- Popup Alert -->
-        <div id="popup-alert" class="fixed inset-0 flex items-center justify-center z-50 hidden bg-black bg-opacity-80 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-            <div class="bg-gray-900 border-2 border-neon-red rounded-lg p-8 max-w-sm w-full shadow-neon transform scale-95 transition-transform duration-300 opacity-0" id="popup-content">
-                <div class="text-neon-red text-5xl mb-4">⚠️</div>
-                <h3 class="font-luxury text-2xl text-white mb-2">Access Denied</h3>
-                <p class="text-gray-300 font-sans mb-6">Try again after the flight.</p>
-                <button id="close-popup" class="px-6 py-2 bg-transparent border border-vegas-gold text-vegas-gold rounded hover:bg-vegas-gold hover:text-black transition-colors uppercase tracking-widest text-xs font-bold">
-                    Dismiss
-                </button>
-            </div>
-        </div>
+        <!-- Footer -->
+        <footer>
+            <p class="footer-note">03 · 14 · 2026 &nbsp;·&nbsp; jared &amp; erin</p>
+        </footer>
 
     </main>
 
-    <style>
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-    </style>
-
     <script>
-        // Target Date: March 14, 2026, 9:30 AM Pacific Time (PDT is -07:00)
-        // Adjust standard vs daylight saving if needed, but in March 2026 daylight saving time starts on March 8th, so -07:00 is correct for PDT.
+        // ── Countdown ──────────────────────────────────────────────
         const targetDate = new Date('2026-03-14T09:30:00-07:00').getTime();
-        
-        // Start date for the status bar (e.g. March 1, 2026)
-        const startDate = new Date('2026-03-01T00:00:00-08:00').getTime();
+        const startDate = new Date('2026-03-10T12:00:00-07:00').getTime();
         const totalDuration = targetDate - startDate;
 
-        // Elements
         const elDays = document.getElementById('days');
         const elHours = document.getElementById('hours');
         const elMinutes = document.getElementById('minutes');
         const elSeconds = document.getElementById('seconds');
-        
-        const countdownContainer = document.getElementById('countdown');
-        const zeroState = document.getElementById('zero-state');
-        
-        const statusBar = document.getElementById('status-bar');
-        const statusPercent = document.getElementById('status-percent');
-        const statusMessage = document.getElementById('status-message');
+        const elCountdown = document.getElementById('countdown');
+        const elZero = document.getElementById('zero-state');
+
+
+        function pad(n) { return String(n).padStart(2, '0'); }
 
         function updateTimer() {
-            const now = new Date().getTime();
+            const now = Date.now();
             const distance = targetDate - now;
 
-            // Update Progress Bar
-            let progress = 0;
-            if (now >= startDate && now < targetDate) {
-                // How much time is left relative to total duration
-                progress = (distance / totalDuration) * 100;
-            } else if (now >= targetDate) {
-                progress = 0;
-            } else {
-                progress = 100;
-            }
-            
-            // Format percentage
-            const percentFormatted = Math.max(0, Math.min(100, progress)).toFixed(1);
-            statusBar.style.width = `${percentFormatted}%`;
-            statusPercent.textContent = `${percentFormatted}%`;
-
-            // Change progress bar color based on percentage
-            if (progress < 20) {
-                statusBar.classList.remove('bg-gradient-to-r', 'from-green-500', 'via-yellow-500', 'to-neon-red');
-                statusBar.style.backgroundColor = '#FF003C';
-                statusMessage.textContent = "CRITICAL: Imminent Las Vegas Departure!";
-                statusMessage.classList.add('neon-text-red');
-            } else if (progress < 50) {
-                statusMessage.textContent = "Warning: Patience levels depleting...";
-            }
-
-            // Zero State
-            if (distance < 0) {
+            if (distance <= 0) {
                 clearInterval(timerInterval);
-                elDays.innerText = '00';
-                elHours.innerText = '00';
-                elMinutes.innerText = '00';
-                elSeconds.innerText = '00';
-                
-                countdownContainer.classList.add('hidden');
-                zeroState.classList.remove('hidden');
+                elCountdown.style.display = 'none';
+                elZero.style.display = 'block';
                 return;
             }
 
-            // Time calculations
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const days = Math.floor(distance / 86400000);
+            const hours = Math.floor((distance % 86400000) / 3600000);
+            const minutes = Math.floor((distance % 3600000) / 60000);
+            const seconds = Math.floor((distance % 60000) / 1000);
 
-            // Output with leading zeros
-            elDays.innerText = String(days).padStart(2, '0');
-            elHours.innerText = String(hours).padStart(2, '0');
-            elMinutes.innerText = String(minutes).padStart(2, '0');
-            elSeconds.innerText = String(seconds).padStart(2, '0');
+            elDays.textContent = pad(days);
+            elHours.textContent = pad(hours);
+            elMinutes.textContent = pad(minutes);
+            elSeconds.textContent = pad(seconds);
         }
 
-        // Initialize and tick
         updateTimer();
         const timerInterval = setInterval(updateTimer, 1000);
 
-        // CTA Interaction
-        const ctaBtn = document.getElementById('cta-button');
-        const popupAlert = document.getElementById('popup-alert');
-        const closePopupBtn = document.getElementById('close-popup');
-        const popupContent = document.getElementById('popup-content');
+        // ── Floating hearts ────────────────────────────────────────
+        const heartsLayer = document.getElementById('hearts-layer');
+        const heartEmojis = ['💕', '💗', '🌹', '✨', '💖', '💓'];
 
-        ctaBtn.addEventListener('click', () => {
-            // Fire confetti
-            var duration = 3000;
-            var end = Date.now() + duration;
+        function spawnHeart() {
+            const el = document.createElement('div');
+            el.className = 'heart';
+            el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.fontSize = (14 + Math.random() * 18) + 'px';
+            const dur = 8 + Math.random() * 10;
+            el.style.animationDuration = dur + 's';
+            el.style.animationDelay = Math.random() * 4 + 's';
+            heartsLayer.appendChild(el);
+            setTimeout(() => el.remove(), (dur + 4) * 1000);
+        }
 
+        // Seed initial hearts
+        for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 600);
+        setInterval(spawnHeart, 1400);
+
+        // ── "No" button escape logic ───────────────────────────────
+        const btnNo = document.getElementById('btn-no');
+        const btnRow = document.getElementById('btn-row');
+        let noClickCount = 0;
+
+        const noPhrases = [
+            'Nope, try again',
+            'Still no?',
+            'Are you sure?',
+            'Reeeally?',
+            'Last chance…',
+            'You can\'t mean that 😢',
+            'Okay fine, but really though?',
+        ];
+
+        function moveNoButton() {
+            const rowRect = btnRow.getBoundingClientRect();
+            const btnRect = btnNo.getBoundingClientRect();
+            const maxX = rowRect.width - btnRect.width;
+            const maxY = 80; // pixels above/below baseline
+
+            const x = Math.random() * maxX - maxX / 2;
+            const y = (Math.random() * 2 - 1) * maxY;
+
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+            btnNo.style.transition = 'transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            btnNo.title = noPhrases[Math.min(noClickCount, noPhrases.length - 1)];
+            noClickCount++;
+        }
+
+        btnNo.addEventListener('mouseover', moveNoButton);
+        btnNo.addEventListener('click', moveNoButton);
+
+        // ── "Yes" button ───────────────────────────────────────────
+        const btnYes = document.getElementById('btn-yes');
+        const popupOverlay = document.getElementById('popup-overlay');
+        const popupClose = document.getElementById('popup-close');
+
+        function launchConfetti() {
+            const colors = ['#e8517a', '#D4AF37', '#f9c6d5', '#fff', '#c23a60'];
+            const end = Date.now() + 4000;
             (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#D4AF37', '#FF003C', '#000000', '#FFFFFF']
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#D4AF37', '#FF003C', '#000000', '#FFFFFF']
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
+                confetti({ particleCount: 6, angle: 60, spread: 70, origin: { x: 0 }, colors });
+                confetti({ particleCount: 6, angle: 120, spread: 70, origin: { x: 1 }, colors });
+                confetti({ particleCount: 4, startVelocity: 20, spread: 360, origin: { x: 0.5, y: 0.4 }, colors, scalar: 0.8 });
+                if (Date.now() < end) requestAnimationFrame(frame);
             }());
+        }
 
-            // Show Popup
+        btnYes.addEventListener('click', () => {
+            launchConfetti();
             setTimeout(() => {
-                popupAlert.classList.remove('hidden');
-                // Trigger reflow
-                void popupAlert.offsetWidth;
-                popupAlert.classList.remove('opacity-0');
-                popupAlert.classList.add('opacity-100');
-                
-                popupContent.classList.remove('opacity-0', 'scale-95');
-                popupContent.classList.add('opacity-100', 'scale-100');
-            }, 500); // slight delay after confetti starts
+                popupOverlay.classList.add('visible');
+            }, 300);
         });
 
-        const closePopup = () => {
-            popupAlert.classList.remove('opacity-100');
-            popupAlert.classList.add('opacity-0');
-            
-            popupContent.classList.remove('opacity-100', 'scale-100');
-            popupContent.classList.add('opacity-0', 'scale-95');
-            
-            setTimeout(() => {
-                popupAlert.classList.add('hidden');
-            }, 300); // Wait for transition
-        };
+        function closePopup() {
+            popupOverlay.classList.remove('visible');
+        }
 
-        closePopupBtn.addEventListener('click', closePopup);
-        
-        // Close on clicking outside
-        popupAlert.addEventListener('click', (e) => {
-            if (e.target === popupAlert) {
-                closePopup();
-            }
+        popupClose.addEventListener('click', closePopup);
+        popupOverlay.addEventListener('click', e => {
+            if (e.target === popupOverlay) closePopup();
         });
     </script>
 </body>
+
 </html>
